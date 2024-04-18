@@ -16,11 +16,11 @@ import java.util.Optional;
 public class AuthenticationService implements UserDetailsService {
     private final UsuarioRepository usuarioRepository;
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findByUSerDetailsUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findUsuarioByEmail(email);
         if (usuarioOptional.isPresent()){
-            usuarioOptional.get().getUSerDetails().setEnabled(true);
-            return usuarioOptional.get().getUSerDetails();
+            usuarioOptional.get().getUserDetails().setEnabled(true);
+            return usuarioOptional.get().getUserDetails();
         }
         throw new UsernameNotFoundException("Usuário não encontrado");
     }

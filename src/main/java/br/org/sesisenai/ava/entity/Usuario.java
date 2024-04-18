@@ -6,7 +6,8 @@ import br.org.sesisenai.ava.security.model.USerDetails;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -14,7 +15,7 @@ import java.util.Set;
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+
 public class Usuario implements ResponseConversorDTO<UsuarioResponseDTO> {
 
     @Id
@@ -26,7 +27,7 @@ public class Usuario implements ResponseConversorDTO<UsuarioResponseDTO> {
     private String senha;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private USerDetails uSerDetails;
+    private USerDetails userDetails;
     @Column(name = "data_cadastro")
     private LocalDateTime dataCadastro;
 
@@ -48,6 +49,21 @@ public class Usuario implements ResponseConversorDTO<UsuarioResponseDTO> {
     public Usuario(Long id) {
         this.id = id;
     }
+
+    public void setSenha(String senha) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.senha = passwordEncoder.encode(senha);
+    }
+
+    public void setUserDetailsEntity() {
+        this.userDetails = USerDetails.builder().usuario(this).enabled(true).accountNonExpired(true).
+                accountNonLocked(true).credentialsNonExpired(true).build();
+    }
+
+    public Usuario() {
+        setUserDetailsEntity();
+    }
+
 }
 
 

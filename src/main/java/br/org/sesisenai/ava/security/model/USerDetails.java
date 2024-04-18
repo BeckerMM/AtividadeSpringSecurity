@@ -22,17 +22,24 @@ public class USerDetails implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
-    private String password;
-    @OneToOne(mappedBy = "uSerDetails")
+   @OneToOne
     private Usuario usuario;
     private  boolean enabled = true;
     private  boolean accountNonExpired = true;
     private  boolean accountNonLocked = true;
     private  boolean credentialsNonExpired = true;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return usuario.getSenha();
+    }
+
+    @Override
+    public String getUsername() {
+        return usuario.getEmail();
     }
 }
